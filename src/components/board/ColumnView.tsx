@@ -6,6 +6,7 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { Plus, Settings } from "lucide-react";
 import type { CardWithRelations, Column } from "@/types/database";
 import CardMini from "./CardMini";
+import { ColumnIcon } from "./ColumnIconPicker";
 
 export default function ColumnView({
   column,
@@ -34,12 +35,20 @@ export default function ColumnView({
   }
 
   return (
-    <div className="flex w-72 shrink-0 flex-col rounded-xl bg-white shadow-lg shadow-black/25">
-      <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-slate-700">{column.name}</h3>
+    <div className="flex w-72 shrink-0 flex-col overflow-hidden rounded-xl bg-white shadow-lg shadow-black/25">
+      <div className="h-1" style={{ backgroundColor: column.color }} />
+
+      <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2.5">
+        <div className="flex min-w-0 items-center gap-2">
           <span
-            className={`rounded-full px-1.5 py-0.5 text-[11px] font-medium ${
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md"
+            style={{ backgroundColor: `${column.color}1a`, color: column.color }}
+          >
+            <ColumnIcon name={column.icon} size={13} />
+          </span>
+          <h3 className="truncate text-sm font-semibold text-slate-700">{column.name}</h3>
+          <span
+            className={`shrink-0 rounded-full px-1.5 py-0.5 text-[11px] font-medium ${
               overLimit ? "bg-red-100 text-red-700" : "bg-mova-100 text-mova-700"
             }`}
           >
@@ -49,7 +58,7 @@ export default function ColumnView({
         </div>
         <button
           onClick={() => onOpenSettings(column.id)}
-          className="rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+          className="shrink-0 rounded p-1 text-slate-400 transition hover:bg-slate-200 hover:text-slate-600"
           aria-label="Configurações da coluna"
         >
           <Settings size={14} />
@@ -64,9 +73,20 @@ export default function ColumnView({
       >
         <SortableContext items={cards.map((c) => c.id)} strategy={verticalListSortingStrategy}>
           {cards.map((card) => (
-            <CardMini key={card.id} card={card} onOpen={() => onOpenCard(card.id)} />
+            <CardMini
+              key={card.id}
+              card={card}
+              accentColor={column.color}
+              onOpen={() => onOpenCard(card.id)}
+            />
           ))}
         </SortableContext>
+
+        {cards.length === 0 && !adding && (
+          <p className="rounded-lg border border-dashed border-slate-200 px-3 py-4 text-center text-xs text-slate-300">
+            Arraste um card ou crie um novo abaixo
+          </p>
+        )}
 
         {!column.block_manual_add &&
           (adding ? (
@@ -104,7 +124,7 @@ export default function ColumnView({
           ) : (
             <button
               onClick={() => setAdding(true)}
-              className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-left text-sm text-slate-500 hover:bg-slate-200"
+              className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-left text-sm text-slate-500 transition hover:bg-slate-200"
             >
               <Plus size={14} /> Novo card
             </button>

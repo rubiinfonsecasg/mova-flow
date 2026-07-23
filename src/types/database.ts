@@ -27,6 +27,8 @@ export interface Column {
   target_days: number | null;
   delivery_qty: number | null;
   delivery_days: number | null;
+  icon: string;
+  color: string;
   created_at: string;
 }
 

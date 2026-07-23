@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { X, Trash2 } from "lucide-react";
 import type { Column } from "@/types/database";
+import ColumnIconPicker from "./ColumnIconPicker";
+import { TAG_PALETTE } from "./TagCreateModal";
 
 export default function ColumnSettingsModal({
   column,
@@ -16,6 +18,8 @@ export default function ColumnSettingsModal({
   onDelete: (columnId: string) => void;
 }) {
   const [name, setName] = useState(column.name);
+  const [icon, setIcon] = useState(column.icon);
+  const [color, setColor] = useState(column.color);
   const [wipLimit, setWipLimit] = useState(column.wip_limit?.toString() ?? "");
   const [targetDays, setTargetDays] = useState(column.target_days?.toString() ?? "");
   const [blockManualAdd, setBlockManualAdd] = useState(column.block_manual_add);
@@ -24,6 +28,8 @@ export default function ColumnSettingsModal({
   function save() {
     onSave(column.id, {
       name: name.trim() || column.name,
+      icon,
+      color,
       wip_limit: wipLimit ? Number(wipLimit) : null,
       target_days: targetDays ? Number(targetDays) : null,
       block_manual_add: blockManualAdd,
@@ -35,7 +41,7 @@ export default function ColumnSettingsModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30" onClick={onClose}>
       <div
-        className="w-full max-w-sm rounded-xl bg-white p-5 shadow-xl"
+        className="max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl bg-white p-5 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
@@ -45,7 +51,7 @@ export default function ColumnSettingsModal({
           </button>
         </div>
 
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 space-y-4">
           <div>
             <label className="text-xs font-semibold uppercase text-slate-400">Nome</label>
             <input
@@ -53,6 +59,31 @@ export default function ColumnSettingsModal({
               onChange={(e) => setName(e.target.value)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-900"
             />
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase text-slate-400">Ícone</label>
+            <div className="mt-1.5">
+              <ColumnIconPicker value={icon} onChange={setIcon} />
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase text-slate-400">Cor de destaque</label>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {TAG_PALETTE.slice(0, 13).map((swatch) => (
+                <button
+                  key={swatch}
+                  type="button"
+                  aria-label={`Cor ${swatch}`}
+                  onClick={() => setColor(swatch)}
+                  style={{ backgroundColor: swatch }}
+                  className={`h-6 w-6 rounded-full transition ${
+                    color === swatch ? "ring-2 ring-slate-900 ring-offset-2" : "hover:scale-110"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">

@@ -232,7 +232,8 @@ export default function BoardView({
           <DragOverlay>
             {activeCard && (
               <div
-                className={`w-72 rounded-lg border p-3 shadow-lg ${
+                style={{ transform: "rotate(2deg)" }}
+                className={`w-72 rounded-lg border p-3 shadow-2xl shadow-black/40 ${
                   isCardOverdue(activeCard)
                     ? "border-mova-800 bg-mova-600"
                     : "border-mova-300 bg-white"

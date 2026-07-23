@@ -4,6 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { format, isPast, isToday } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { GripVertical } from "lucide-react";
 import type { CardWithRelations } from "@/types/database";
 import Avatar from "@/components/ui/Avatar";
 import TagPill from "@/components/ui/TagPill";
@@ -60,9 +61,11 @@ export function CardVisual({ card }: { card: CardWithRelations }) {
 
 export default function CardMini({
   card,
+  accentColor,
   onOpen,
 }: {
   card: CardWithRelations;
+  accentColor?: string;
   onOpen: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -76,6 +79,7 @@ export default function CardMini({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.4 : 1,
+    borderLeftColor: !overdue && accentColor ? accentColor : undefined,
   };
 
   return (
@@ -85,13 +89,19 @@ export default function CardMini({
       {...attributes}
       {...listeners}
       onClick={onOpen}
-      className={`cursor-pointer rounded-lg border p-3 shadow-sm transition hover:shadow-md ${
+      className={`group relative cursor-pointer rounded-lg border border-l-[3px] p-3 pr-6 shadow-sm transition hover:shadow-md ${
         overdue
           ? "border-mova-800 bg-mova-600 hover:border-mova-700"
           : "border-slate-200 bg-white hover:border-mova-400"
       }`}
     >
       <CardVisual card={card} />
+      <GripVertical
+        size={14}
+        className={`absolute right-1.5 top-1.5 opacity-0 transition group-hover:opacity-100 ${
+          overdue ? "text-mova-200" : "text-slate-300"
+        }`}
+      />
     </div>
   );
 }

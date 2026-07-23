@@ -5,10 +5,10 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 const DEFAULT_COLUMNS = [
-  { name: "Planejar / Pesquisar", position: 0 },
-  { name: "Produção", position: 1 },
-  { name: "Aprovação", position: 2 },
-  { name: "Concluído", position: 3, is_done_column: true },
+  { name: "Planejar / Pesquisar", position: 0, icon: "search", color: "#0ea5e9" },
+  { name: "Produção", position: 1, icon: "camera", color: "#f59e0b" },
+  { name: "Aprovação", position: 2, icon: "thumbs-up", color: "#ec4899" },
+  { name: "Concluído", position: 3, is_done_column: true, icon: "rocket", color: "#22c55e" },
 ];
 
 export async function createBoard(formData: FormData) {
