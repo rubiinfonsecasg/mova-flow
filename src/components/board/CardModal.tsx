@@ -5,9 +5,8 @@ import { X, Plus, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { CardWithRelations, Profile, Tag } from "@/types/database";
 import Avatar from "@/components/ui/Avatar";
-import TagPill from "@/components/ui/TagPill";
-
-const TAG_COLORS = ["#6366f1", "#ec4899", "#f59e0b", "#10b981", "#0ea5e9", "#ef4444"];
+import TagPicker from "./TagPicker";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 export default function CardModal({
   card,
@@ -16,6 +15,8 @@ export default function CardModal({
   onClose,
   onUpdate,
   onTagsChange,
+  onDeleteTag,
+  onDeleteCard,
 }: {
   card: CardWithRelations;
   profiles: Profile[];
@@ -23,12 +24,14 @@ export default function CardModal({
   onClose: () => void;
   onUpdate: (cardId: string, patch: Partial<CardWithRelations>) => void;
   onTagsChange: (boardTag: Tag) => void;
+  onDeleteTag: (tagId: string) => void;
+  onDeleteCard: (cardId: string) => void;
 }) {
   const supabase = createClient();
   const [title, setTitle] = useState(card.title);
   const [description, setDescription] = useState(card.description ?? "");
   const [newTask, setNewTask] = useState("");
-  const [newTagName, setNewTagName] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   async function saveTitle() {
     if (title.trim() === card.title) return;
@@ -85,10 +88,7 @@ export default function CardModal({
     }
   }
 
-  async function createTag() {
-    const name = newTagName.trim();
-    if (!name) return;
-    const color = TAG_COLORS[boardTags.length % TAG_COLORS.length];
+  async function createTag(name: string, color: string) {
     const { data: tag } = await supabase
       .from("tags")
       .insert({ board_id: card.board_id, name, color })
@@ -99,7 +99,6 @@ export default function CardModal({
       await supabase.from("card_tags").insert({ card_id: card.id, tag_id: tag.id });
       onUpdate(card.id, { tags: [...card.tags, tag] });
     }
-    setNewTagName("");
   }
 
   async function addTask() {
@@ -148,9 +147,18 @@ export default function CardModal({
             <option value="aguardando">Aguardando</option>
             <option value="cancelado">Cancelado</option>
           </select>
-          <button onClick={onClose} className="rounded p-1 hover:bg-slate-100" aria-label="Fechar">
-            <X size={18} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="rounded p-1.5 text-red-500 hover:bg-red-50"
+              aria-label="Excluir card"
+            >
+              <Trash2 size={16} />
+            </button>
+            <button onClick={onClose} className="rounded p-1 hover:bg-slate-100" aria-label="Fechar">
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 space-y-6 px-5 py-4">
@@ -158,7 +166,7 @@ export default function CardModal({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             onBlur={saveTitle}
-            className="w-full text-lg font-semibold text-slate-900 outline-none focus:border-b focus:border-indigo-400"
+            className="w-full text-lg font-semibold text-slate-900 outline-none focus:border-b focus:border-mova-500"
           />
 
           <div>
@@ -166,7 +174,7 @@ export default function CardModal({
             <select
               value={card.leader_id ?? ""}
               onChange={(e) => setLeader(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+              className="mt-1 block w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-900"
             >
               <option value="">Sem líder</option>
               {profiles.map((p) => (
@@ -188,7 +196,7 @@ export default function CardModal({
                     onClick={() => toggleAssignee(p)}
                     className={`flex items-center gap-1 rounded-full border px-2 py-1 text-xs ${
                       active
-                        ? "border-indigo-400 bg-indigo-50 text-indigo-700"
+                        ? "border-mova-500 bg-mova-100 text-mova-700"
                         : "border-slate-200 text-slate-500 hover:bg-slate-50"
                     }`}
                   >
@@ -208,36 +216,20 @@ export default function CardModal({
               type="date"
               defaultValue={card.due_date ?? ""}
               onChange={(e) => setDueDate(e.target.value)}
-              className="mt-1 block rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+              className="mt-1 block rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-900"
             />
           </div>
 
           <div>
             <label className="text-xs font-semibold uppercase text-slate-400">Tags</label>
-            <div className="mt-1 flex flex-wrap items-center gap-1.5">
-              {boardTags.map((tag) => {
-                const active = card.tags.some((t) => t.id === tag.id);
-                return (
-                  <button key={tag.id} onClick={() => toggleTag(tag)} className={active ? "" : "opacity-40"}>
-                    <TagPill tag={tag} />
-                  </button>
-                );
-              })}
-            </div>
-            <div className="mt-2 flex gap-1.5">
-              <input
-                value={newTagName}
-                onChange={(e) => setNewTagName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && createTag()}
-                placeholder="Nova tag"
-                className="flex-1 rounded border border-slate-300 px-2 py-1 text-xs"
+            <div className="mt-1">
+              <TagPicker
+                boardTags={boardTags}
+                selectedTags={card.tags}
+                onToggle={toggleTag}
+                onCreate={createTag}
+                onDelete={onDeleteTag}
               />
-              <button
-                onClick={createTag}
-                className="rounded bg-slate-100 px-2 py-1 text-xs text-slate-600 hover:bg-slate-200"
-              >
-                Criar
-              </button>
             </div>
           </div>
 
@@ -248,7 +240,7 @@ export default function CardModal({
               onChange={(e) => setDescription(e.target.value)}
               onBlur={saveDescription}
               rows={4}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm outline-none focus:border-indigo-400"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-900 outline-none focus:border-mova-500"
               placeholder="Detalhes da pauta, briefing, links..."
             />
           </div>
@@ -260,6 +252,7 @@ export default function CardModal({
                 <li key={task.id} className="flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
+                    className="accent-mova-600"
                     checked={task.done}
                     onChange={(e) => toggleTask(task.id, e.target.checked)}
                   />
@@ -281,7 +274,7 @@ export default function CardModal({
                 onChange={(e) => setNewTask(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addTask()}
                 placeholder="Nova tarefa"
-                className="flex-1 rounded border border-slate-300 px-2 py-1 text-xs"
+                className="flex-1 rounded border border-slate-300 px-2 py-1 text-xs text-slate-900"
               />
               <button
                 onClick={addTask}
@@ -293,6 +286,20 @@ export default function CardModal({
           </div>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <ConfirmDialog
+          title="Excluir card"
+          message="Tem certeza que quer apagar?"
+          confirmLabel="Sim"
+          cancelLabel="Cancelar"
+          onCancel={() => setShowDeleteConfirm(false)}
+          onConfirm={() => {
+            onDeleteCard(card.id);
+            setShowDeleteConfirm(false);
+          }}
+        />
+      )}
     </div>
   );
 }

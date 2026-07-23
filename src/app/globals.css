@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-mova-950);
+  --foreground: #ffffff;
+
+  /* Paleta da marca Mova — extraída da logo (fundo roxo + acentos rosa/verde) */
+  --color-mova-950: #1a0733;
+  --color-mova-900: #250a49;
+  --color-mova-850: #2c0d57;
+  --color-mova-800: #33116b;
+  --color-mova-700: #431c86;
+  --color-mova-600: #5b2aa8;
+  --color-mova-500: #7c3aed;
+  --color-mova-400: #a374f2;
+  --color-mova-300: #bd9af7;
+  --color-mova-200: #d9c8fb;
+  --color-mova-100: #ede4fb;
+  --color-mova-pink: #e0179e;
+  --color-mova-teal: #16d89a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-mova-950: var(--color-mova-950);
+  --color-mova-900: var(--color-mova-900);
+  --color-mova-850: var(--color-mova-850);
+  --color-mova-800: var(--color-mova-800);
+  --color-mova-700: var(--color-mova-700);
+  --color-mova-600: var(--color-mova-600);
+  --color-mova-500: var(--color-mova-500);
+  --color-mova-400: var(--color-mova-400);
+  --color-mova-300: var(--color-mova-300);
+  --color-mova-200: var(--color-mova-200);
+  --color-mova-100: var(--color-mova-100);
+  --color-mova-pink: var(--color-mova-pink);
+  --color-mova-teal: var(--color-mova-teal);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Campos de formulário têm fundo claro por padrão em toda a aplicação;
+   sem isto, herdam o branco do body e o texto digitado fica ilegível. */
+@layer base {
+  input,
+  textarea,
+  select {
+    color: #0f172a;
+  }
 }

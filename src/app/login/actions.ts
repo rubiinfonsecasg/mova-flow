@@ -18,7 +18,12 @@ export async function signIn(
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    return { error: "E-mail ou senha inválidos." };
+    if (error.code === "email_not_confirmed") {
+      return {
+        error: "Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada (e spam) e clique no link de confirmação.",
+      };
+    }
+    return { error: "E-mail ou senha inválidos. " + error.message };
   }
 
   redirect("/fluxos");

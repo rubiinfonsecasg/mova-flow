@@ -51,7 +51,7 @@ export default function ColumnSettingsModal({
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-900"
             />
           </div>
 
@@ -66,7 +66,7 @@ export default function ColumnSettingsModal({
                 value={wipLimit}
                 onChange={(e) => setWipLimit(e.target.value)}
                 placeholder="Sem limite"
-                className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-900"
               />
             </div>
             <div>
@@ -79,7 +79,7 @@ export default function ColumnSettingsModal({
                 value={targetDays}
                 onChange={(e) => setTargetDays(e.target.value)}
                 placeholder="—"
-                className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-slate-900"
               />
             </div>
           </div>
@@ -87,6 +87,7 @@ export default function ColumnSettingsModal({
           <label className="flex items-center gap-2 text-sm text-slate-600">
             <input
               type="checkbox"
+              className="accent-mova-600"
               checked={blockManualAdd}
               onChange={(e) => setBlockManualAdd(e.target.checked)}
             />
@@ -96,6 +97,7 @@ export default function ColumnSettingsModal({
           <label className="flex items-center gap-2 text-sm text-slate-600">
             <input
               type="checkbox"
+              className="accent-mova-600"
               checked={isDoneColumn}
               onChange={(e) => setIsDoneColumn(e.target.checked)}
             />
@@ -112,7 +114,7 @@ export default function ColumnSettingsModal({
           </button>
           <button
             onClick={save}
-            className="rounded-lg bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+            className="rounded-lg bg-mova-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-mova-700"
           >
             Salvar
           </button>

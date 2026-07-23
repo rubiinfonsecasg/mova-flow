@@ -17,7 +17,7 @@ import type { Board, CardWithRelations, Column, Profile, Tag } from "@/types/dat
 import ColumnView from "./ColumnView";
 import CardModal from "./CardModal";
 import ColumnSettingsModal from "./ColumnSettingsModal";
-import { CardVisual } from "./CardMini";
+import { CardVisual, isCardOverdue } from "./CardMini";
 
 export default function BoardView({
   board,
@@ -161,6 +161,12 @@ export default function BoardView({
     setCards((prev) => prev.map((c) => (c.id === cardId ? { ...c, ...patch } : c)));
   }
 
+  async function handleDeleteCard(cardId: string) {
+    setCards((prev) => prev.filter((c) => c.id !== cardId));
+    setOpenCardId(null);
+    await supabase.from("cards").delete().eq("id", cardId);
+  }
+
   async function handleCreateColumn() {
     const name = "Nova coluna";
     const position = columns.length;
@@ -187,17 +193,26 @@ export default function BoardView({
     await supabase.from("columns").delete().eq("id", columnId);
   }
 
+  async function handleDeleteTag(tagId: string) {
+    setTags((prev) => prev.filter((t) => t.id !== tagId));
+    setCards((prev) =>
+      prev.map((c) => ({ ...c, tags: c.tags.filter((t) => t.id !== tagId) }))
+    );
+    await supabase.from("tags").delete().eq("id", tagId);
+  }
+
   const openCard = cards.find((c) => c.id === openCardId) ?? null;
   const settingsColumn = columns.find((c) => c.id === settingsColumnId) ?? null;
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="border-b border-slate-200 bg-white px-6 py-3">
-        <h1 className="text-lg font-semibold text-slate-900">{board.name}</h1>
+      <div className="border-b border-white/10 bg-mova-900 px-6 py-3">
+        <h1 className="text-lg font-semibold text-white">{board.name}</h1>
       </div>
 
-      <div className="flex flex-1 gap-4 overflow-x-auto p-4">
+      <div className="flex flex-1 gap-4 overflow-x-auto bg-mova-950 p-4">
         <DndContext
+          id={`board-dnd-${board.id}`}
           sensors={sensors}
           collisionDetection={closestCorners}
           onDragStart={handleDragStart}
@@ -216,7 +231,13 @@ export default function BoardView({
 
           <DragOverlay>
             {activeCard && (
-              <div className="w-72 rounded-lg border border-indigo-300 bg-white p-3 shadow-lg">
+              <div
+                className={`w-72 rounded-lg border p-3 shadow-lg ${
+                  isCardOverdue(activeCard)
+                    ? "border-mova-800 bg-mova-600"
+                    : "border-mova-300 bg-white"
+                }`}
+              >
                 <CardVisual card={activeCard} />
               </div>
             )}
@@ -225,7 +246,7 @@ export default function BoardView({
 
         <button
           onClick={handleCreateColumn}
-          className="flex h-10 w-56 shrink-0 items-center justify-center gap-1 rounded-xl border-2 border-dashed border-slate-300 text-sm text-slate-500 transition hover:border-indigo-300 hover:text-indigo-600"
+          className="flex h-10 w-56 shrink-0 items-center justify-center gap-1 rounded-xl border-2 border-dashed border-white/15 text-sm text-mova-200 transition hover:border-mova-400 hover:text-white"
         >
           <Plus size={16} /> Nova coluna
         </button>
@@ -239,6 +260,8 @@ export default function BoardView({
           onClose={() => setOpenCardId(null)}
           onUpdate={handleUpdateCard}
           onTagsChange={(tag) => setTags((prev) => [...prev, tag])}
+          onDeleteTag={handleDeleteTag}
+          onDeleteCard={handleDeleteCard}
         />
       )}
 

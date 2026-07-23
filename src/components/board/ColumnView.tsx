@@ -34,13 +34,13 @@ export default function ColumnView({
   }
 
   return (
-    <div className="flex w-72 shrink-0 flex-col rounded-xl bg-slate-100">
-      <div className="flex items-center justify-between px-3 py-2">
+    <div className="flex w-72 shrink-0 flex-col rounded-xl bg-white shadow-lg shadow-black/25">
+      <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2">
         <div className="flex items-center gap-2">
           <h3 className="text-sm font-semibold text-slate-700">{column.name}</h3>
           <span
             className={`rounded-full px-1.5 py-0.5 text-[11px] font-medium ${
-              overLimit ? "bg-red-100 text-red-700" : "bg-slate-200 text-slate-600"
+              overLimit ? "bg-red-100 text-red-700" : "bg-mova-100 text-mova-700"
             }`}
           >
             {cards.length}
@@ -59,7 +59,7 @@ export default function ColumnView({
       <div
         ref={setNodeRef}
         className={`flex min-h-[60px] flex-1 flex-col gap-2 rounded-lg p-2 transition ${
-          isOver ? "bg-indigo-50 ring-2 ring-indigo-200" : ""
+          isOver ? "bg-mova-100 ring-2 ring-mova-300" : ""
         }`}
       >
         <SortableContext items={cards.map((c) => c.id)} strategy={verticalListSortingStrategy}>
@@ -70,7 +70,7 @@ export default function ColumnView({
 
         {!column.block_manual_add &&
           (adding ? (
-            <div className="rounded-lg border border-indigo-300 bg-white p-2">
+            <div className="rounded-lg border border-mova-300 bg-white p-2">
               <textarea
                 autoFocus
                 value={title}
@@ -83,13 +83,13 @@ export default function ColumnView({
                   if (e.key === "Escape") setAdding(false);
                 }}
                 placeholder="Título do card"
-                className="w-full resize-none text-sm outline-none"
+                className="w-full resize-none text-sm text-slate-900 outline-none"
                 rows={2}
               />
               <div className="mt-1 flex gap-2">
                 <button
                   onClick={submitCard}
-                  className="rounded bg-indigo-600 px-2 py-1 text-xs font-medium text-white hover:bg-indigo-700"
+                  className="rounded bg-mova-600 px-2 py-1 text-xs font-medium text-white hover:bg-mova-700"
                 >
                   Adicionar
                 </button>

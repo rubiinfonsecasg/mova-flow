@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Mova Flow",
   description: "Gestão de fluxos de produção da agência",
+  icons: {
+    icon: "/mova-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -27,7 +30,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-100 text-slate-900">{children}</body>
+      <body className="min-h-full flex flex-col bg-mova-950 text-white">{children}</body>
     </html>
   );
 }
