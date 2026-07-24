@@ -8,6 +8,7 @@ import type { Profile, Tag } from "@/types/database";
 import Avatar from "@/components/ui/Avatar";
 import TagPill from "@/components/ui/TagPill";
 import NewBoardButton from "@/components/fluxos/NewBoardButton";
+import BrandHero from "@/components/fluxos/BrandHero";
 import PendingTasksList, { type PendingTask } from "@/components/fluxos/PendingTasksList";
 import CalendarView, { type CalendarCard } from "@/components/fluxos/CalendarView";
 import DailyQuote from "@/components/fluxos/DailyQuote";
@@ -97,7 +98,8 @@ export default async function FluxosPage() {
           )}
 
           {recentCards.length > 0 && (
-            <section className="mt-10">
+            <section className="mt-10 flex flex-col items-start gap-2 xl:flex-row xl:items-center xl:gap-6">
+              <div className="min-w-0 flex-1">
               <div className="mb-3 flex items-center gap-2">
                 <Sparkles size={15} className="text-mova-300" />
                 <h2 className="text-xs font-semibold uppercase tracking-wide text-mova-200">
@@ -151,6 +153,8 @@ export default async function FluxosPage() {
                   );
                 })}
               </div>
+              </div>
+              <BrandHero />
             </section>
           )}
 
