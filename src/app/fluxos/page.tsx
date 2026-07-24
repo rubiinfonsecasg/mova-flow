@@ -173,7 +173,7 @@ export default async function FluxosPage() {
             <PendingTasksList initialTasks={pendingTasks} />
           </section>
 
-          <div className="mt-10">
+          <div className="mt-6">
             <BrandHero />
           </div>
         </div>
