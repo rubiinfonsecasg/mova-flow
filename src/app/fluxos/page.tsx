@@ -7,7 +7,6 @@ import { createBoard } from "./actions";
 import type { Profile, Tag } from "@/types/database";
 import Avatar from "@/components/ui/Avatar";
 import TagPill from "@/components/ui/TagPill";
-import BrandHero from "@/components/fluxos/BrandHero";
 import NewBoardButton from "@/components/fluxos/NewBoardButton";
 import PendingTasksList, { type PendingTask } from "@/components/fluxos/PendingTasksList";
 import CalendarView, { type CalendarCard } from "@/components/fluxos/CalendarView";
@@ -172,10 +171,6 @@ export default async function FluxosPage() {
             </div>
             <PendingTasksList initialTasks={pendingTasks} />
           </section>
-
-          <div className="mt-6">
-            <BrandHero />
-          </div>
         </div>
 
         <aside className="flex flex-col gap-6">
