@@ -28,7 +28,7 @@ export default async function FluxosLayout({ children }: { children: React.React
         <div className="flex items-center justify-between px-6 py-3.5">
           <Link href="/fluxos" className="group relative h-11 w-44 overflow-hidden transition group-hover:scale-105 sm:h-12 sm:w-48">
             <Image
-              src="/mova-logo-full.png"
+              src="/mova-logo-transparente.png"
               alt="Mova Marketing Digital"
               fill
               sizes="200px"

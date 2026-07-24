@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import { AlertCircle, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export interface PendingTask {
@@ -31,19 +31,15 @@ export default function PendingTasksList({ initialTasks }: { initialTasks: Pendi
   }
 
   return (
-    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
       {tasks.map((task) => (
         <div
           key={task.id}
-          className="flex items-center gap-2 rounded-full border border-white/10 bg-white pl-1 pr-3 py-1 shadow-lg shadow-black/20"
+          className="flex items-center gap-2 rounded-full border-2 border-mova-400/40 bg-white py-1 pl-1 pr-1 shadow-lg shadow-black/20"
         >
-          <button
-            onClick={() => complete(task.id)}
-            aria-label="Concluir tarefa"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mova-100 text-mova-600 transition hover:bg-mova-600 hover:text-white"
-          >
-            <CheckCircle2 size={15} />
-          </button>
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mova-500 text-white">
+            <AlertCircle size={15} />
+          </span>
           <Link
             href={`/fluxos/${task.boardId}`}
             className="min-w-0 flex-1"
@@ -52,6 +48,13 @@ export default function PendingTasksList({ initialTasks }: { initialTasks: Pendi
             <p className="truncate text-xs font-medium text-slate-800">{task.title}</p>
             <p className="truncate text-[10px] text-slate-400">{task.cardTitle}</p>
           </Link>
+          <button
+            onClick={() => complete(task.id)}
+            aria-label="Concluir tarefa"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-emerald-500 text-emerald-500 transition hover:bg-emerald-500 hover:text-white"
+          >
+            <Check size={15} strokeWidth={3} />
+          </button>
         </div>
       ))}
     </div>

@@ -69,10 +69,8 @@ export default async function FluxosPage() {
   });
 
   return (
-    <div className="relative flex-1 overflow-hidden">
-      <BrandHero />
-
-      <div className="relative z-[1] mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-6 py-10 lg:grid-cols-[1fr_320px]">
+    <div className="flex-1">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-6 py-10 lg:grid-cols-[1fr_320px]">
         <div>
           <h1 className="text-2xl font-semibold text-white">Fluxos</h1>
           <p className="mt-1 text-sm text-mova-200">Sua central de rotina e produção.</p>
@@ -82,12 +80,14 @@ export default async function FluxosPage() {
               <Link
                 key={board.id}
                 href={`/fluxos/${board.id}`}
-                className="group flex items-center gap-2.5 rounded-full bg-gradient-to-r from-mova-600 to-mova-500 py-2 pl-2 pr-4 shadow-lg shadow-black/30 ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:shadow-xl"
+                className="group flex items-center gap-3 rounded-full bg-gradient-to-r from-mova-600 via-mova-500 to-mova-600 py-1.5 pl-1.5 pr-5 shadow-lg shadow-black/40 ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:shadow-xl"
               >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-sm font-bold text-white">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-extrabold text-mova-700 shadow-inner">
                   {board.name.slice(0, 1).toUpperCase()}
                 </span>
-                <span className="text-sm font-semibold text-white">{board.name}</span>
+                <span className="text-sm font-bold uppercase tracking-wide text-white">
+                  {board.name}
+                </span>
               </Link>
             ))}
             <NewBoardButton createBoard={createBoard} />
@@ -172,6 +172,10 @@ export default async function FluxosPage() {
             </div>
             <PendingTasksList initialTasks={pendingTasks} />
           </section>
+
+          <div className="mt-10">
+            <BrandHero />
+          </div>
         </div>
 
         <aside className="flex flex-col gap-6">
